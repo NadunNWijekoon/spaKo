@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create your free spaKo account and start learning languages today." />
+  <title>Register – spaKo</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦜</text></svg>" />
+  <style>
+    body { background: linear-gradient(160deg, #f8f9ff 0%, #eef2ff 40%, #e8edf8 100%); min-height: 100vh; display: flex; flex-direction: column; }
+    .auth-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 100px 24px 60px; }
+    .auth-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; max-width: 1000px; width: 100%; background: white; border-radius: var(--border-radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid var(--glass-border); }
+    .auth-left { background: linear-gradient(160deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); padding: 60px 44px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+    .auth-left::before { content: ''; position: absolute; bottom: -20%; left: -20%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(109,169,255,0.15), transparent 70%); }
+    .auth-left-content { position: relative; z-index: 1; }
+    .auth-brand { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: white; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .auth-brand span { color: var(--soft-blue); }
+    .auth-tagline { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 36px; }
+    .benefit-list { display: flex; flex-direction: column; gap: 16px; }
+    .benefit-item { display: flex; align-items: flex-start; gap: 12px; }
+    .benefit-check { width: 24px; height: 24px; border-radius: 50%; background: rgba(0,200,83,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #00C853; flex-shrink: 0; margin-top: 2px; }
+    .benefit-text { color: rgba(255,255,255,0.85); font-size: 0.88rem; line-height: 1.5; }
+    .auth-right { padding: 48px 44px; overflow-y: auto; max-height: 90vh; }
+    .auth-title { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+    .auth-subtitle { color: var(--medium-text); margin-bottom: 28px; font-size: 0.9rem; }
+    .name-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .google-btn { width: 100%; padding: 12px 24px; border: 1.5px solid var(--light-steel); border-radius: var(--border-radius-sm); background: white; font-family: var(--font-heading); font-size: 0.9rem; font-weight: 600; color: var(--dark-text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: var(--transition); }
+    .google-btn:hover { background: #f8f9fa; box-shadow: var(--shadow); }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--light-text); font-size: 0.82rem; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--light-steel); }
+    .pw-wrapper { position: relative; }
+    .pw-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--light-text); }
+    .terms-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+    .terms-check input { margin-top: 3px; accent-color: var(--soft-blue); }
+    .terms-check label { font-size: 0.85rem; color: var(--medium-text); line-height: 1.4; }
+    .auth-footer-text { text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--medium-text); }
+    .auth-link { color: var(--soft-blue); font-weight: 600; }
+    .strength-bar { height: 4px; border-radius: 2px; margin-top: 6px; background: var(--light-steel); overflow: hidden; display: none; }
+    .strength-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease, background 0.3s ease; }
+    .strength-label { font-size: 0.75rem; margin-top: 4px; display: none; }
+    @media (max-width: 768px) { .auth-wrapper { grid-template-columns: 1fr; } .auth-left { display: none; } .auth-right { padding: 36px 24px; } .name-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand"><div class="brand-icon">🦜</div>spa<span>Ko</span></a>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="auth-main">
+    <div class="auth-wrapper">
+      <div class="auth-left">
+        <div class="auth-left-content">
+          <div class="auth-brand">🦜 spa<span>Ko</span></div>
+          <p class="auth-tagline">Join 50,000+ language learners worldwide</p>
+          <div class="benefit-list">
+            <div class="benefit-item">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text"><strong style="color: white;">Free forever basics</strong> – start translating and learning without any payment</div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text"><strong style="color: white;">AI Tutor included</strong> – get personalized lessons from our AI language coach</div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text"><strong style="color: white;">120+ languages</strong> – learn and translate between the world's most popular languages</div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text"><strong style="color: white;">Progress tracking</strong> – monitor your growth with charts, streaks, and badges</div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text"><strong style="color: white;">Community access</strong> – join forums and discuss with fellow language learners</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <h1 class="auth-title">Create Your Account ✨</h1>
+        <p class="auth-subtitle">Start your language journey in seconds — it's free!</p>
+
+        <button class="google-btn" id="google-reg-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign up with Google
+        </button>
+
+        <div class="divider">or register with email</div>
+
+        <form id="register-form" novalidate>
+          <div class="name-grid">
+            <div class="form-group">
+              <label class="form-label" for="reg-name">Full Name</label>
+              <input class="form-input" type="text" id="reg-name" placeholder="John Doe" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-username">Username</label>
+              <input class="form-input" type="text" id="reg-username" placeholder="john_learner" autocomplete="username" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email Address</label>
+            <input class="form-input" type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-lang">Native Language</label>
+            <select class="form-select" id="reg-lang">
+              <option value="">Select your native language</option>
+              <option value="en">🇬🇧 English</option>
+              <option value="si">🇱🇰 Sinhala</option>
+              <option value="ta">🇮🇳 Tamil</option>
+              <option value="fr">🇫🇷 French</option>
+              <option value="de">🇩🇪 German</option>
+              <option value="ja">🇯🇵 Japanese</option>
+              <option value="zh">🇨🇳 Chinese</option>
+              <option value="ko">🇰🇷 Korean</option>
+              <option value="ar">🇸🇦 Arabic</option>
+              <option value="es">🇪🇸 Spanish</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password</label>
+            <div class="pw-wrapper">
+              <input class="form-input" type="password" id="reg-password" placeholder="Create a strong password" autocomplete="new-password" required />
+              <button type="button" class="pw-toggle" id="reg-pw-toggle" aria-label="Toggle password">👁</button>
+            </div>
+            <div class="strength-bar" id="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+            <div class="strength-label" id="strength-label"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-confirm">Confirm Password</label>
+            <div class="pw-wrapper">
+              <input class="form-input" type="password" id="reg-confirm" placeholder="Repeat your password" autocomplete="new-password" required />
+            </div>
+          </div>
+          <div class="terms-check">
+            <input type="checkbox" id="terms-agree" required />
+            <label for="terms-agree">I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a></label>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;" id="reg-submit-btn">Create My Account 🚀</button>
+        </form>
+        <p class="auth-footer-text">Already have an account? <a href="login.html" class="auth-link">Login here</a></p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container"></div>
+  <script src="js/main.js"></script>
+  <script>
+    const pwField = document.getElementById('reg-password');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthFill = document.getElementById('strength-fill');
+    const strengthLabel = document.getElementById('strength-label');
+
+    pwField.addEventListener('input', function() {
+      const val = this.value;
+      strengthBar.style.display = 'block';
+      strengthLabel.style.display = 'block';
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const levels = [
+        { width: '25%', color: '#FF5252', text: 'Weak' },
+        { width: '50%', color: '#FFD600', text: 'Fair' },
+        { width: '75%', color: '#6DA9FF', text: 'Good' },
+        { width: '100%', color: '#00C853', text: 'Strong' },
+      ];
+      const level = levels[Math.max(0, score - 1)] || levels[0];
+      strengthFill.style.width = level.width;
+      strengthFill.style.background = level.color;
+      strengthLabel.textContent = `Password strength: ${level.text}`;
+      strengthLabel.style.color = level.color;
+    });
+
+    document.getElementById('reg-pw-toggle').addEventListener('click', function() {
+      const isText = pwField.type === 'text';
+      pwField.type = isText ? 'password' : 'text';
+      this.textContent = isText ? '👁' : '🙈';
+    });
+
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+      const terms = document.getElementById('terms-agree').checked;
+      if (!name || !email || !password) { window.spaKo.ToastManager.show('Please fill in all required fields', 'error'); return; }
+      if (password !== confirm) { window.spaKo.ToastManager.show('Passwords do not match', 'error'); return; }
+      if (!terms) { window.spaKo.ToastManager.show('Please accept the Terms of Service', 'error'); return; }
+      const btn = document.getElementById('reg-submit-btn');
+      btn.textContent = 'Creating account...';
+      btn.disabled = true;
+      setTimeout(() => {
+        window.spaKo.Auth.login({ name, email, username: document.getElementById('reg-username').value });
+        window.spaKo.ToastManager.show('Account created! Welcome to spaKo!', 'success');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+      }, 1200);
+    });
+
+    document.getElementById('google-reg-btn').addEventListener('click', () => {
+      window.spaKo.ToastManager.show('Google OAuth would open here in production', 'info');
+    });
+  </script>
+</body>
+</html>

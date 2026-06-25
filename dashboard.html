@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="spaKo Dashboard – Your language learning command center." />
+  <title>Dashboard – spaKo</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦜</text></svg>" />
+  <style>
+    .welcome-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      border-radius: var(--border-radius-lg);
+      padding: 36px 40px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(109,169,255,0.2) 0%, transparent 70%);
+    }
+    .welcome-card-inner { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .welcome-greeting {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .welcome-sub { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .quick-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .quick-stat-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 22px 20px;
+      border: 1px solid var(--light-steel);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: var(--transition);
+    }
+    .quick-stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .qs-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .qs-icon-blue { background: rgba(109,169,255,0.12); }
+    .qs-icon-green { background: rgba(0,200,83,0.12); }
+    .qs-icon-yellow { background: rgba(255,214,0,0.15); }
+    .qs-icon-red { background: rgba(255,82,82,0.1); }
+    .qs-value { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--dark-text); }
+    .qs-label { font-size: 0.8rem; color: var(--light-text); margin-top: 3px; }
+
+    .dashboard-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+    .quick-access-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .qa-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      border: 1.5px solid var(--light-steel);
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      color: var(--dark-text);
+      background: white;
+      transition: var(--transition);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .qa-card:hover { border-color: var(--soft-blue); box-shadow: var(--shadow-blue); transform: translateY(-2px); }
+    .qa-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+    .daily-goal-card { background: white; border-radius: var(--border-radius); padding: 28px; border: 1px solid var(--light-steel); box-shadow: var(--shadow); }
+    .goal-label { font-family: var(--font-heading); font-weight: 600; font-size: 0.88rem; color: var(--medium-text); margin-bottom: 16px; }
+    .goal-ring-wrap { display: flex; align-items: center; gap: 24px; margin-bottom: 20px; }
+    .goal-ring { position: relative; width: 90px; height: 90px; }
+    .goal-ring svg { width: 90px; height: 90px; transform: rotate(-90deg); }
+    .goal-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-heading); }
+    .goal-ring-pct { font-size: 1.1rem; font-weight: 800; color: var(--soft-blue); line-height: 1; }
+    .goal-ring-sub { font-size: 0.65rem; color: var(--light-text); }
+    .goal-items { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .goal-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+    .goal-item-check { font-size: 0.85rem; }
+    .goal-item-done { color: var(--success); }
+    .goal-item-pending { color: var(--light-text); }
+
+    .recent-activity { background: white; border-radius: var(--border-radius); padding: 28px; border: 1px solid var(--light-steel); box-shadow: var(--shadow); }
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--platinum); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .activity-info { flex: 1; }
+    .activity-title { font-size: 0.9rem; font-weight: 600; font-family: var(--font-heading); color: var(--dark-text); }
+    .activity-time { font-size: 0.78rem; color: var(--light-text); margin-top: 2px; }
+    .activity-score { font-family: var(--font-heading); font-weight: 700; font-size: 0.9rem; }
+
+    .learning-languages { background: white; border-radius: var(--border-radius); padding: 28px; border: 1px solid var(--light-steel); box-shadow: var(--shadow); margin-bottom: 24px; }
+    .ll-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .ll-item { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 12px; border: 1.5px solid var(--light-steel); border-radius: var(--border-radius); text-align: center; cursor: pointer; transition: var(--transition); }
+    .ll-item:hover { border-color: var(--soft-blue); box-shadow: var(--shadow-blue); }
+    .ll-flag { font-size: 2rem; }
+    .ll-name { font-family: var(--font-heading); font-weight: 700; font-size: 0.9rem; }
+    .ll-level { font-size: 0.75rem; color: var(--light-text); }
+    .ll-progress { width: 100%; height: 4px; background: var(--light-steel); border-radius: 2px; overflow: hidden; }
+    .ll-fill { height: 100%; background: var(--blue-gradient); border-radius: 2px; }
+
+    @media (max-width: 1024px) {
+      .quick-stats { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .ll-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .welcome-card-inner { flex-direction: column; align-items: flex-start; }
+      .quick-access-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand"><div class="brand-icon">🦜</div>spa<span>Ko</span></a>
+      <div class="nav-links">
+        <a href="translator.html">Translate</a>
+        <a href="learning.html">Learn</a>
+        <a href="ai-tutor.html">AI Tutor</a>
+        <a href="forum.html">Community</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-ghost btn-sm" onclick="window.spaKo.Auth.logout()" id="logout-btn">Logout</button>
+        <a href="profile.html" class="btn btn-secondary btn-sm" id="profile-nav-btn">👤 Profile</a>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section-title">Main</div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link active"><span class="sidebar-icon">🏠</span> Dashboard</a>
+        <a href="translator.html" class="sidebar-link"><span class="sidebar-icon">🌐</span> Translator</a>
+        <a href="learning.html" class="sidebar-link"><span class="sidebar-icon">📚</span> Learn</a>
+        <a href="ai-tutor.html" class="sidebar-link"><span class="sidebar-icon">🤖</span> AI Tutor</a>
+      </nav>
+      <div class="sidebar-section-title">Practice</div>
+      <nav class="sidebar-nav">
+        <a href="vocabulary.html" class="sidebar-link"><span class="sidebar-icon">🃏</span> Vocabulary</a>
+        <a href="grammar.html" class="sidebar-link"><span class="sidebar-icon">📝</span> Grammar</a>
+        <a href="pronunciation.html" class="sidebar-link"><span class="sidebar-icon">🎤</span> Pronunciation</a>
+        <a href="quiz.html" class="sidebar-link"><span class="sidebar-icon">❓</span> Quiz</a>
+      </nav>
+      <div class="sidebar-section-title">Track</div>
+      <nav class="sidebar-nav">
+        <a href="progress.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Progress</a>
+        <a href="forum.html" class="sidebar-link"><span class="sidebar-icon">💬</span> Forum</a>
+        <a href="profile.html" class="sidebar-link"><span class="sidebar-icon">👤</span> Profile</a>
+        <a href="settings.html" class="sidebar-link"><span class="sidebar-icon">⚙️</span> Settings</a>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Welcome Card -->
+      <div class="welcome-card">
+        <div class="welcome-card-inner">
+          <div>
+            <div class="welcome-greeting">Welcome Back, <span class="user-name-display">John</span>! 👋</div>
+            <div class="welcome-sub">You're on a 7-day streak! Keep it up to earn the 🔥 Flame Badge</div>
+            <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+              <a href="learning.html" class="btn btn-primary btn-sm" id="dash-continue-btn">▶ Continue Learning</a>
+              <a href="translator.html" class="btn btn-ghost btn-sm" style="color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.3);" id="dash-translate-btn">🌐 Translate</a>
+            </div>
+          </div>
+          <div class="streak-badge">🔥 7-Day Streak</div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="quick-stat-card">
+          <div class="qs-icon qs-icon-blue">📚</div>
+          <div>
+            <div class="qs-value" data-counter data-target="24">0</div>
+            <div class="qs-label">Lessons Completed</div>
+          </div>
+        </div>
+        <div class="quick-stat-card">
+          <div class="qs-icon qs-icon-green">🃏</div>
+          <div>
+            <div class="qs-value" data-counter data-target="340">0</div>
+            <div class="qs-label">Words Learned</div>
+          </div>
+        </div>
+        <div class="quick-stat-card">
+          <div class="qs-icon qs-icon-yellow">🏆</div>
+          <div>
+            <div class="qs-value">87<span style="font-size: 1rem;">%</span></div>
+            <div class="qs-label">Avg Quiz Score</div>
+          </div>
+        </div>
+        <div class="quick-stat-card">
+          <div class="qs-icon qs-icon-red">🔥</div>
+          <div>
+            <div class="qs-value" data-counter data-target="7">0</div>
+            <div class="qs-label">Day Streak</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="dashboard-grid">
+        <!-- Left -->
+        <div>
+          <div class="card" style="margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+              <h4 style="margin: 0;">📈 Learning Progress</h4>
+              <a href="progress.html" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+            <div class="progress-container">
+              <div class="progress-info"><span>Japanese</span><span style="color: var(--soft-blue);">68%</span></div>
+              <div class="progress-bar"><div class="progress-fill" data-width="68%"></div></div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-info"><span>Spanish</span><span style="color: var(--soft-blue);">45%</span></div>
+              <div class="progress-bar"><div class="progress-fill" data-width="45%"></div></div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-info"><span>French</span><span style="color: var(--soft-blue);">30%</span></div>
+              <div class="progress-bar"><div class="progress-fill" data-width="30%"></div></div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="recent-activity">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <h4 style="margin: 0;">🕐 Recent Activity</h4>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon" style="background: rgba(109,169,255,0.1);">📚</div>
+                <div class="activity-info">
+                  <div class="activity-title">Japanese Lesson 8 – Greetings</div>
+                  <div class="activity-time">2 hours ago</div>
+                </div>
+                <div class="activity-score" style="color: var(--success);">✓ Done</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background: rgba(255,214,0,0.15);">❓</div>
+                <div class="activity-info">
+                  <div class="activity-title">Spanish Grammar Quiz</div>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+                <div class="activity-score" style="color: var(--soft-blue);">92%</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background: rgba(0,200,83,0.1);">🃏</div>
+                <div class="activity-info">
+                  <div class="activity-title">Vocabulary – 10 new words</div>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+                <div class="activity-score" style="color: var(--success);">+10</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background: rgba(255,82,82,0.1);">🎤</div>
+                <div class="activity-info">
+                  <div class="activity-title">Pronunciation Practice</div>
+                  <div class="activity-time">2 days ago</div>
+                </div>
+                <div class="activity-score" style="color: var(--soft-blue);">87%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div>
+          <!-- Daily Goal -->
+          <div class="daily-goal-card" style="margin-bottom: 24px;">
+            <div class="goal-label">📅 Today's Learning Goal</div>
+            <div class="goal-ring-wrap">
+              <div class="goal-ring">
+                <svg viewBox="0 0 90 90">
+                  <circle cx="45" cy="45" r="38" fill="none" stroke="#E5E4E2" stroke-width="8"/>
+                  <circle cx="45" cy="45" r="38" fill="none" stroke="#6DA9FF" stroke-width="8" stroke-dasharray="239" stroke-dashoffset="96" stroke-linecap="round"/>
+                </svg>
+                <div class="goal-ring-text">
+                  <span class="goal-ring-pct">60%</span>
+                  <span class="goal-ring-sub">done</span>
+                </div>
+              </div>
+              <div class="goal-items">
+                <div class="goal-item goal-item-done"><span class="goal-item-check">✅</span> 1 Lesson completed</div>
+                <div class="goal-item goal-item-done"><span class="goal-item-check">✅</span> 5 Vocabulary cards</div>
+                <div class="goal-item goal-item-pending"><span class="goal-item-check">⬜</span> Take a quiz</div>
+                <div class="goal-item goal-item-pending"><span class="goal-item-check">⬜</span> Chat with AI Tutor</div>
+                <div class="goal-item goal-item-pending"><span class="goal-item-check">⬜</span> Pronunciation drill</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Access -->
+          <div class="card" style="margin-bottom: 24px;">
+            <h4 style="margin-bottom: 16px;">⚡ Quick Access</h4>
+            <div class="quick-access-grid">
+              <a href="translator.html" class="qa-card" id="qa-translate">
+                <div class="qa-icon" style="background: rgba(109,169,255,0.1);">🌐</div>Translate
+              </a>
+              <a href="learning.html" class="qa-card" id="qa-learn">
+                <div class="qa-icon" style="background: rgba(0,200,83,0.1);">📚</div>Learn
+              </a>
+              <a href="vocabulary.html" class="qa-card" id="qa-vocab">
+                <div class="qa-icon" style="background: rgba(255,214,0,0.15);">🃏</div>Vocabulary
+              </a>
+              <a href="ai-tutor.html" class="qa-card" id="qa-ai">
+                <div class="qa-icon" style="background: rgba(109,169,255,0.1);">🤖</div>AI Tutor
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Languages Being Learned -->
+      <div class="learning-languages">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+          <h4 style="margin: 0;">🌍 Your Languages</h4>
+          <a href="learning.html" class="btn btn-ghost btn-sm">+ Add Language</a>
+        </div>
+        <div class="ll-grid">
+          <div class="ll-item" onclick="window.location.href='learning.html'" id="lang-japanese">
+            <div class="ll-flag">🇯🇵</div>
+            <div class="ll-name">Japanese</div>
+            <div class="ll-level">Intermediate</div>
+            <div class="ll-progress"><div class="ll-fill" style="width: 68%;"></div></div>
+          </div>
+          <div class="ll-item" onclick="window.location.href='learning.html'" id="lang-spanish">
+            <div class="ll-flag">🇪🇸</div>
+            <div class="ll-name">Spanish</div>
+            <div class="ll-level">Beginner</div>
+            <div class="ll-progress"><div class="ll-fill" style="width: 45%;"></div></div>
+          </div>
+          <div class="ll-item" onclick="window.location.href='learning.html'" id="lang-french">
+            <div class="ll-flag">🇫🇷</div>
+            <div class="ll-name">French</div>
+            <div class="ll-level">Beginner</div>
+            <div class="ll-progress"><div class="ll-fill" style="width: 30%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container"></div>
+  <script src="js/main.js"></script>
+</body>
+</html>

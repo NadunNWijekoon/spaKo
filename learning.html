@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="spaKo Language Learning – Structured courses from Beginner to Advanced." />
+  <title>Language Learning – spaKo</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦜</text></svg>" />
+  <style>
+    .lang-selection-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
+    .lang-sel-card {
+      background: white;
+      border: 2px solid var(--light-steel);
+      border-radius: var(--border-radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .lang-sel-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--blue-gradient); transform: scaleX(0); transition: var(--transition); }
+    .lang-sel-card:hover::before, .lang-sel-card.selected::before { transform: scaleX(1); }
+    .lang-sel-card:hover, .lang-sel-card.selected { border-color: var(--soft-blue); box-shadow: var(--shadow-blue); transform: translateY(-4px); }
+    .lang-sel-card.selected { background: rgba(109,169,255,0.04); }
+    .lang-flag-big { font-size: 3rem; margin-bottom: 10px; }
+    .lang-name-big { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+    .lang-native { font-size: 0.85rem; color: var(--light-text); margin-bottom: 10px; }
+    .lang-learners { font-size: 0.78rem; color: var(--medium-text); background: var(--platinum); padding: 4px 10px; border-radius: 50px; display: inline-block; }
+
+    .level-tabs-wrap { background: white; border-radius: var(--border-radius); padding: 20px 24px; border: 1px solid var(--light-steel); margin-bottom: 24px; }
+    .level-tabs { display: flex; gap: 12px; }
+    .level-tab {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: var(--border-radius); cursor: pointer; transition: var(--transition);
+      border: 2px solid var(--light-steel); background: white; font-family: var(--font-heading); font-weight: 600; font-size: 0.9rem;
+    }
+    .level-tab:hover { border-color: var(--soft-blue); }
+    .level-tab.active { background: var(--blue-gradient); color: white; border-color: transparent; box-shadow: var(--shadow-blue); }
+    .level-indicator { width: 10px; height: 10px; border-radius: 50%; }
+    .level-beginner { background: var(--success); }
+    .level-intermediate { background: var(--warning); }
+    .level-advanced { background: var(--error); }
+
+    .lessons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .lesson-card {
+      background: white;
+      border: 1.5px solid var(--light-steel);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .lesson-card:hover { border-color: var(--soft-blue); box-shadow: var(--shadow-blue); transform: translateX(4px); }
+    .lesson-card.completed { opacity: 0.8; }
+    .lesson-number {
+      width: 48px; height: 48px; border-radius: 12px; background: var(--blue-gradient);
+      display: flex; align-items: center; justify-content: center; color: white;
+      font-family: var(--font-heading); font-weight: 800; font-size: 1rem; flex-shrink: 0;
+    }
+    .lesson-number.done { background: linear-gradient(135deg, #00C853, #00A844); }
+    .lesson-number.locked { background: var(--platinum); color: var(--light-text); }
+    .lesson-title { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+    .lesson-desc { font-size: 0.85rem; color: var(--medium-text); margin-bottom: 10px; }
+    .lesson-meta { display: flex; gap: 12px; align-items: center; }
+    .lesson-badge { font-size: 0.75rem; padding: 3px 10px; border-radius: 50px; font-weight: 600; font-family: var(--font-heading); }
+    .lesson-vocab { font-size: 0.78rem; color: var(--light-text); }
+
+    .lesson-structure-card { background: white; border-radius: var(--border-radius); padding: 28px; border: 1px solid var(--light-steel); margin-bottom: 24px; }
+    .lesson-struct-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 16px; }
+    .struct-item { text-align: center; padding: 16px 8px; border: 1.5px solid var(--light-steel); border-radius: var(--border-radius-sm); transition: var(--transition); cursor: pointer; }
+    .struct-item:hover { border-color: var(--soft-blue); background: rgba(109,169,255,0.04); }
+    .struct-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .struct-name { font-size: 0.8rem; font-weight: 700; font-family: var(--font-heading); }
+
+    @media (max-width: 1024px) { .lang-selection-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .lang-selection-grid { grid-template-columns: 1fr; } .lessons-grid { grid-template-columns: 1fr; } .level-tabs { flex-wrap: wrap; } .lesson-struct-grid { grid-template-columns: repeat(3, 1fr); } }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand"><div class="brand-icon">🦜</div>spa<span>Ko</span></a>
+      <div class="nav-links">
+        <a href="translator.html">Translate</a>
+        <a href="learning.html" class="active">Learn</a>
+        <a href="ai-tutor.html">AI Tutor</a>
+        <a href="forum.html">Community</a>
+      </div>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section-title">Navigation</div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon">🏠</span> Dashboard</a>
+        <a href="translator.html" class="sidebar-link"><span class="sidebar-icon">🌐</span> Translator</a>
+        <a href="learning.html" class="sidebar-link active"><span class="sidebar-icon">📚</span> Learn</a>
+        <a href="ai-tutor.html" class="sidebar-link"><span class="sidebar-icon">🤖</span> AI Tutor</a>
+        <a href="vocabulary.html" class="sidebar-link"><span class="sidebar-icon">🃏</span> Vocabulary</a>
+        <a href="grammar.html" class="sidebar-link"><span class="sidebar-icon">📝</span> Grammar</a>
+        <a href="pronunciation.html" class="sidebar-link"><span class="sidebar-icon">🎤</span> Pronunciation</a>
+        <a href="quiz.html" class="sidebar-link"><span class="sidebar-icon">❓</span> Quiz</a>
+        <a href="progress.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Progress</a>
+        <a href="forum.html" class="sidebar-link"><span class="sidebar-icon">💬</span> Forum</a>
+        <a href="profile.html" class="sidebar-link"><span class="sidebar-icon">👤</span> Profile</a>
+        <a href="settings.html" class="sidebar-link"><span class="sidebar-icon">⚙️</span> Settings</a>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">📚 Language Learning Center</h1>
+        <p class="page-subtitle">Choose a language and start your journey from Beginner to Advanced</p>
+      </div>
+
+      <!-- Language Selection -->
+      <div class="card" style="margin-bottom: 24px;">
+        <h4 style="margin-bottom: 20px;">🌍 Choose Your Language</h4>
+        <div class="lang-selection-grid" id="lang-grid">
+          <div class="lang-sel-card selected" onclick="selectLang(this, 'Japanese')" id="lang-jp">
+            <div class="lang-flag-big">🇯🇵</div>
+            <div class="lang-name-big">Japanese</div>
+            <div class="lang-native">日本語</div>
+            <div class="lang-learners">12.4K learners</div>
+          </div>
+          <div class="lang-sel-card" onclick="selectLang(this, 'Korean')" id="lang-kr">
+            <div class="lang-flag-big">🇰🇷</div>
+            <div class="lang-name-big">Korean</div>
+            <div class="lang-native">한국어</div>
+            <div class="lang-learners">9.8K learners</div>
+          </div>
+          <div class="lang-sel-card" onclick="selectLang(this, 'Spanish')" id="lang-es">
+            <div class="lang-flag-big">🇪🇸</div>
+            <div class="lang-name-big">Spanish</div>
+            <div class="lang-native">Español</div>
+            <div class="lang-learners">18.2K learners</div>
+          </div>
+          <div class="lang-sel-card" onclick="selectLang(this, 'French')" id="lang-fr">
+            <div class="lang-flag-big">🇫🇷</div>
+            <div class="lang-name-big">French</div>
+            <div class="lang-native">Français</div>
+            <div class="lang-learners">11.5K learners</div>
+          </div>
+          <div class="lang-sel-card" onclick="selectLang(this, 'German')" id="lang-de">
+            <div class="lang-flag-big">🇩🇪</div>
+            <div class="lang-name-big">German</div>
+            <div class="lang-native">Deutsch</div>
+            <div class="lang-learners">7.3K learners</div>
+          </div>
+          <div class="lang-sel-card" onclick="selectLang(this, 'English')" id="lang-en">
+            <div class="lang-flag-big">🇬🇧</div>
+            <div class="lang-name-big">English</div>
+            <div class="lang-native">English</div>
+            <div class="lang-learners">25K learners</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lesson Structure Info -->
+      <div class="lesson-structure-card">
+        <h4>📋 Each Lesson Contains</h4>
+        <div class="lesson-struct-grid">
+          <div class="struct-item">
+            <div class="struct-icon">📖</div>
+            <div class="struct-name">Vocabulary</div>
+          </div>
+          <div class="struct-item">
+            <div class="struct-icon">📐</div>
+            <div class="struct-name">Grammar Rules</div>
+          </div>
+          <div class="struct-item">
+            <div class="struct-icon">🔊</div>
+            <div class="struct-name">Pronunciation Audio</div>
+          </div>
+          <div class="struct-item">
+            <div class="struct-icon">❓</div>
+            <div class="struct-name">Quiz</div>
+          </div>
+          <div class="struct-item">
+            <div class="struct-icon">✏️</div>
+            <div class="struct-name">Practice Exercises</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Selection -->
+      <div class="level-tabs-wrap">
+        <h4 style="margin-bottom: 16px;">🎯 Select Level – <span id="current-lang-display">Japanese</span></h4>
+        <div class="level-tabs">
+          <div class="level-tab active" onclick="selectLevel(this, 'beginner')" id="tab-beginner">
+            <div class="level-indicator level-beginner"></div>Beginner
+          </div>
+          <div class="level-tab" onclick="selectLevel(this, 'intermediate')" id="tab-intermediate">
+            <div class="level-indicator level-intermediate"></div>Intermediate
+          </div>
+          <div class="level-tab" onclick="selectLevel(this, 'advanced')" id="tab-advanced">
+            <div class="level-indicator level-advanced"></div>Advanced
+          </div>
+        </div>
+      </div>
+
+      <!-- Lessons Grid -->
+      <div class="lessons-grid" id="lessons-grid">
+        <!-- Populated by JS -->
+      </div>
+    </main>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay2"></div>
+  <div class="toast-container"></div>
+  <script src="js/main.js"></script>
+  <script>
+    const LESSONS = {
+      beginner: [
+        { num: 1, title: 'Greetings & Introductions', desc: 'Learn basic greetings, self-introduction phrases, and polite expressions.', vocab: 15, duration: '20 min', done: true },
+        { num: 2, title: 'Numbers & Counting', desc: 'Master numbers 1-100, counting, and basic arithmetic expressions.', vocab: 20, duration: '25 min', done: true },
+        { num: 3, title: 'Days & Time', desc: 'Learn days of the week, months, telling time, and date expressions.', vocab: 18, duration: '22 min', done: false },
+        { num: 4, title: 'Colors & Shapes', desc: 'Identify and describe colors, shapes, and basic visual attributes.', vocab: 16, duration: '18 min', done: false },
+        { num: 5, title: 'Food & Drinks', desc: 'Order food, describe dishes, and navigate restaurant conversations.', vocab: 25, duration: '30 min', done: false },
+        { num: 6, title: 'Family & Relationships', desc: 'Family members, relationship terms, and describing your family.', vocab: 20, duration: '25 min', done: false },
+      ],
+      intermediate: [
+        { num: 1, title: 'Past Tense & Events', desc: 'Describe past events, tell stories, and use past verb forms correctly.', vocab: 30, duration: '35 min', done: false },
+        { num: 2, title: 'Shopping & Money', desc: 'Prices, bargaining, shopping conversations, and financial terms.', vocab: 28, duration: '32 min', done: false },
+        { num: 3, title: 'Travel & Transportation', desc: 'Directions, transport options, booking, and travel vocabulary.', vocab: 35, duration: '40 min', done: false },
+        { num: 4, title: 'Health & Body', desc: 'Body parts, symptoms, doctor visits, and medical vocabulary.', vocab: 30, duration: '35 min', done: false },
+      ],
+      advanced: [
+        { num: 1, title: 'Formal Writing & Business', desc: 'Professional communication, formal letters, and business vocabulary.', vocab: 45, duration: '50 min', done: false },
+        { num: 2, title: 'Idioms & Expressions', desc: 'Native idiomatic expressions, proverbs, and colloquial language.', vocab: 40, duration: '45 min', done: false },
+        { num: 3, title: 'Academic Language', desc: 'Research, academic discussions, and complex grammatical structures.', vocab: 50, duration: '55 min', done: false },
+      ],
+    };
+
+    let currentLevel = 'beginner';
+    let currentLang = 'Japanese';
+
+    function renderLessons() {
+      const grid = document.getElementById('lessons-grid');
+      const lessons = LESSONS[currentLevel];
+      grid.innerHTML = lessons.map((l, i) => `
+        <div class="lesson-card ${l.done ? 'completed' : ''}" onclick="openLesson(${l.num})" id="lesson-${l.num}">
+          <div class="lesson-number ${l.done ? 'done' : ''}">${l.done ? '✓' : l.num}</div>
+          <div style="flex: 1;">
+            <div class="lesson-title">${l.title}</div>
+            <div class="lesson-desc">${l.desc}</div>
+            <div class="lesson-meta">
+              <span class="lesson-badge badge-blue">📖 ${l.vocab} words</span>
+              <span class="lesson-badge badge-silver">⏱ ${l.duration}</span>
+              ${l.done ? '<span class="lesson-badge badge-green">✅ Complete</span>' : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectLevel(el, level) {
+      document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      currentLevel = level;
+      renderLessons();
+    }
+
+    function selectLang(el, lang) {
+      document.querySelectorAll('.lang-sel-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      currentLang = lang;
+      document.getElementById('current-lang-display').textContent = lang;
+      renderLessons();
+    }
+
+    function openLesson(num) {
+      window.spaKo.ToastManager.show(`Opening ${currentLang} Lesson ${num}...`, 'info');
+      setTimeout(() => window.spaKo.ToastManager.show('Lesson content loaded! Study hard 📚', 'success'), 1200);
+    }
+
+    renderLessons();
+  </script>
+</body>
+</html>
